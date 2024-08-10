@@ -11,26 +11,56 @@ function App() {
   }, []);
 
   const fetchTasks = async () => {
-    const response = await fetch('http://localhost:8080/api/tasks');
-    const data = await response.json();
-    setTasks(data);
+    try {
+      const response = await fetch('http://localhost:8080/api/tasks');
+      const data = await response.json();
+      setTasks(data);
+    } catch (error) {
+      console.error('Error fetching tasks:', error);  // Log the error
+    }
   };
 
   const addTask = async () => {
-    const response = await fetch('http://localhost:8080/api/tasks', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        title,
-        description,
-      }),
-    });
-    if (response.ok) {
+    try {
+      const response = await fetch('http://localhost:8080/api/tasks', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          description,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const data = await response.json();
+      console.log('Task added:', data);  // Log the response
       fetchTasks();
       setTitle('');
       setDescription('');
+    } catch (error) {
+      console.error('Error adding task:', error);  // Log the error
+    }
+  };
+
+  const deleteTask = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/tasks/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      console.log('Task deleted:', id);  // Log the response
+      fetchTasks();
+    } catch (error) {
+      console.error('Error deleting task:', error);  // Log the error
     }
   };
 
@@ -54,6 +84,7 @@ function App() {
         {tasks.map((task) => (
           <li key={task.id}>
             {task.title}: {task.description}
+            <button onClick={() => deleteTask(task.id)}>Delete</button>
           </li>
         ))}
       </ul>
