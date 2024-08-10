@@ -20,7 +20,6 @@ public class TaskService {
     }
 
     public Task save(Task task) {
-        System.out.println("Saving task: " + task);
         return taskRepository.save(task);
     }
 
