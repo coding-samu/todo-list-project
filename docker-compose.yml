@@ -1,0 +1,29 @@
+version: '3'
+services:
+  app:
+    image: todolist-app
+    container_name: todolist-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/todolist
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+
+  db:
+    image: postgres:15
+    container_name: todolist-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: todolist
+    ports:
+      - "5432:5432"
+
+  frontend:
+    image: todo-list-frontend
+    container_name: todo-list-frontend
+    ports:
+      - "3000:80"
