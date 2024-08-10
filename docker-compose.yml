@@ -1,8 +1,11 @@
 version: '3'
+
 services:
   app:
-    image: todolist-app
-    container_name: todolist-app
+    build:
+      context: ./todo-list-backend
+      dockerfile: Dockerfile
+    container_name: todolist-backend
     ports:
       - "8080:8080"
     depends_on:
@@ -23,7 +26,9 @@ services:
       - "5432:5432"
 
   frontend:
-    image: todo-list-frontend
+    build:
+      context: ./todo-list-frontend
+      dockerfile: Dockerfile
     container_name: todo-list-frontend
     ports:
       - "3000:80"
